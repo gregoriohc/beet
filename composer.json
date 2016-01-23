@@ -29,7 +29,8 @@
     "tymon/jwt-auth": "0.5.x",
     "lucadegasperi/oauth2-server-laravel": "5.1.x",
     "zizaco/entrust": "dev-laravel-5-2@dev",
-    "patricktalmadge/bootstrapper": "~5"
+    "patricktalmadge/bootstrapper": "~5",
+    "almasaeed2010/adminlte": "~2.0"
   },
   "autoload": {
     "psr-4": {
