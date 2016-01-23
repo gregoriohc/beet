@@ -36,7 +36,7 @@
       "src/migrations"
     ],
     "psr-4": {
-      "Gregoriohc\\Beet": "src/Beet"
+      "Gregoriohc\\Beet\\": "src/Beet/"
     }
   }
 }
