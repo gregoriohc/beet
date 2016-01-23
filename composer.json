@@ -28,7 +28,8 @@
     "barryvdh/laravel-cors": "^0.7.3",
     "tymon/jwt-auth": "0.5.x",
     "lucadegasperi/oauth2-server-laravel": "5.1.x",
-    "zizaco/entrust": "dev-laravel-5-2@dev"
+    "zizaco/entrust": "dev-laravel-5-2@dev",
+    "patricktalmadge/bootstrapper": "~5"
   },
   "autoload": {
     "psr-4": {
