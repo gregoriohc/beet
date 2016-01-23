@@ -1,0 +1,35 @@
+{
+  "name": "gregoriohc/beet",
+  "license": "MIT",
+  "description": "A Laravel 5 web application and REST API builder",
+  "keywords": ["laravel", "api", "rest", "web", "application", "builder"],
+  "homepage": "http://github.com/gregoriohc/beet",
+  "authors": [
+    {
+      "name": "Gregorio Hernández Caso",
+      "email": "gregoriohc@gmail.com"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/gregoriohc/beet/issues",
+    "source": "https://github.com/gregoriohc/beet"
+  },
+  "require": {
+    "php": ">=5.3.0",
+    "dingo/api": "1.0.x@dev",
+    "asm89/stack-cors": "dev-master as 0.2.2",
+    "barryvdh/laravel-cors": "^0.7.3",
+    "tymon/jwt-auth": "0.5.x",
+    "lucadegasperi/oauth2-server-laravel": "5.1.x",
+    "zizaco/entrust": "dev-laravel-5-2@dev",
+    "acacha/admin-lte-template-laravel": "^2.0"
+  },
+  "autoload": {
+    "classmap": [
+      "src/migrations"
+    ],
+    "psr-4": {
+      "Gregoriohc\\Beet": "src/Beet"
+    }
+  }
+}
