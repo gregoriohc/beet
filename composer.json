@@ -31,9 +31,6 @@
     "zizaco/entrust": "dev-laravel-5-2@dev"
   },
   "autoload": {
-    "classmap": [
-      "src/migrations"
-    ],
     "psr-4": {
       "Gregoriohc\\Beet\\": "src/Beet/"
     }
