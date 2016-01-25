@@ -1,11 +1,11 @@
 <?php
 
-namespace Gregoriohc\Beet\Providers;
+namespace Gregoriohc\Beet\Support\Providers;
 
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
-class RouteServiceProvider extends ServiceProvider
+abstract class RouteServiceProvider extends ServiceProvider
 {
     /**
      * Define the routes for the application.

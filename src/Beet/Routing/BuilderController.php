@@ -1,17 +1,19 @@
 <?php
 
-namespace Gregoriohc\Beet\Http\Controllers;
+namespace Gregoriohc\Beet\Routing;
 
 use Gregoriohc\Beet\Http\Controllers\Controller as BaseController;
 
-class WebController extends BaseController
+class BuilderController extends BaseController
 {
     /**
      * Create a new web controller instance.
      */
     public function __construct()
     {
-        $this->module = 'web';
+        $this->middleware('auth');
+
+        $this->module = 'builder';
 
         parent::__construct();
     }

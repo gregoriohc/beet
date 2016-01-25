@@ -1,6 +1,6 @@
 <?php
 
-namespace Gregoriohc\Beet\Http\Controllers;
+namespace Gregoriohc\Beet\Routing;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -33,7 +33,19 @@ class Controller extends BaseController
      */
     public function index()
     {
-        return view($this->module . '.' . $this->resource . '.index');
+        $data = [
+            'resource' => $this->resource,
+            'modelData' => false,
+        ];
+
+        //$data = $this->getRouter()->getRoutes();
+
+        if ($this->model) {
+            $modelData = call_user_func_array([$this->model, 'all'], []);
+            $data['modelData'] = $modelData->toArray();
+        }
+
+        return view($this->module . '.' . $this->resource . '.index', $data);
     }
 
     /**

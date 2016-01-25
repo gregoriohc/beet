@@ -1,6 +1,6 @@
 <?php
 
-namespace Gregoriohc\Beet\Models;
+namespace Gregoriohc\Beet\Auth;
 
 use Zizaco\Entrust\EntrustPermission;
 
