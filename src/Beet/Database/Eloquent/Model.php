@@ -2,8 +2,8 @@
 
 namespace Gregoriohc\Beet\Database\Eloquent;
 
-use Zizaco\Entrust\EntrustPermission;
+use Illuminate\Database\Eloquent\Model as BaseModel;
 
-abstract class Model extends EntrustPermission
+abstract class Model extends BaseModel
 {
 }

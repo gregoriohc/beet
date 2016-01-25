@@ -1,0 +1,9 @@
+<?php
+
+namespace App\Base\Http\Controllers\{{namespaceSuffix}};
+
+use Gregoriohc\Beet\Routing\{{baseClass}} as BaseController;
+
+abstract class {{class}} extends BaseController
+{
+}

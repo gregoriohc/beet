@@ -2,9 +2,7 @@
 
 namespace Gregoriohc\Beet\Routing;
 
-use Gregoriohc\Beet\Http\Controllers\Controller as BaseController;
-
-class ApiController extends BaseController
+class ApiController extends Controller
 {
     /**
      * Create a new web controller instance.
@@ -13,7 +11,7 @@ class ApiController extends BaseController
     {
         $this->middleware('auth');
 
-        $this->module = 'api';
+        $this->module = strtolower(substr(class_basename(self::class), 0, -10));
 
         parent::__construct();
     }

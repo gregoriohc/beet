@@ -1,13 +1,13 @@
 <?php
 
-namespace Gregoriohc\Beet;
+namespace Gregoriohc\Beet\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \Gregoriohc\Html\FormBuilder
  */
-class FormFacade extends Facade
+class Form extends Facade
 {
 
     /**

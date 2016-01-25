@@ -24,6 +24,13 @@ class Controller extends BaseController
      */
     public function __construct()
     {
+        $resource = substr(class_basename(get_class($this)), 0, -10);
+        $this->resource = strtolower($resource);
+
+        $model = 'App\\Models\\' . $resource;
+        if (class_exists($model)) {
+            $this->model = $model;
+        }
     }
 
     /**

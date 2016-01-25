@@ -1,0 +1,9 @@
+<?php
+
+namespace App\Base\Models;
+
+use Gregoriohc\Beet\Auth\Permission as BasePermission;
+
+abstract class Permission extends BasePermission
+{
+}

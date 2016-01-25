@@ -1,6 +1,6 @@
 <?php
 
-namespace Gregoriohc\Beet;
+namespace Gregoriohc\Beet\View\Html;
 
 use Collective\Html\FormBuilder as BaseFormBuilder;
 

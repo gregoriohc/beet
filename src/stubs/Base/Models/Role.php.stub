@@ -1,0 +1,9 @@
+<?php
+
+namespace App\Base\Models;
+
+use Gregoriohc\Beet\Auth\Role as BaseRole;
+
+abstract class Role extends BaseRole
+{
+}

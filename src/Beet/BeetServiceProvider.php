@@ -2,17 +2,13 @@
 
 namespace Gregoriohc\Beet;
 
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
+use Gregoriohc\Beet\View\Html\FormBuilder;
+use Gregoriohc\Beet\View\Html\HtmlBuilder;
 
-class HtmlServiceProvider extends ServiceProvider
+class BeetServiceProvider extends ServiceProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = true;
-
     /**
      * Register the service provider.
      *
@@ -20,12 +16,37 @@ class HtmlServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerHtmlBuilder();
+        $providers = [
+            'Dingo\Api\Provider\LaravelServiceProvider',
+            'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
+            'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
+            'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
+            'Barryvdh\Cors\ServiceProvider',
+            'Zizaco\Entrust\EntrustServiceProvider',
+            'Bootstrapper\BootstrapperL5ServiceProvider',
+        ];
+        foreach ($providers as $provider) {
+            $this->app->register($provider);
+        }
 
+        $aliases = [
+            'JWTAuth'       => 'Tymon\JWTAuth\Facades\JWTAuth',
+            'JWTFactory'    => 'Tymon\JWTAuth\Facades\JWTFactory',
+            'Authorizer'    => 'LucaDegasperi\OAuth2Server\Facades\Authorizer',
+            'Entrust'       => 'Zizaco\Entrust\EntrustFacade',
+            'Html'          => 'Gregoriohc\Beet\Facades\Html',
+            'Form'          => 'Gregoriohc\Beet\Facades\Form',
+            'Table'         => 'Bootstrapper\Facades\Table',
+        ];
+        foreach ($aliases as $name => $class) {
+            AliasLoader::getInstance()->alias($name, $class);
+        }
+
+        $this->registerHtmlBuilder();
         $this->registerFormBuilder();
 
-        $this->app->alias('html', 'Gregoriohc\Beet\HtmlBuilder');
-        $this->app->alias('form', 'Gregoriohc\Beet\FormBuilder');
+        $this->app->alias('html', 'Gregoriohc\Beet\View\Html\HtmlBuilder');
+        $this->app->alias('form', 'Gregoriohc\Beet\View\Html\FormBuilder');
     }
 
     /**
@@ -61,6 +82,6 @@ class HtmlServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['html', 'form', 'Gregoriohc\Beet\HtmlBuilder', 'Gregoriohc\Beet\FormBuilder'];
+        return ['html', 'form', 'Gregoriohc\Beet\View\Html\HtmlBuilder', 'Gregoriohc\Beet\View\Html\FormBuilder'];
     }
 }

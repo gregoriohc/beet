@@ -1,0 +1,9 @@
+<?php
+
+namespace App\Base\Models;
+
+use Gregoriohc\Beet\Auth\User as BaseUser;
+
+abstract class User extends BaseUser
+{
+}

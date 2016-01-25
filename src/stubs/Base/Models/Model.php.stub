@@ -1,0 +1,9 @@
+<?php
+
+namespace App\Base\Models;
+
+use Gregoriohc\Beet\Database\Eloquent\Model as BaseModel;
+
+abstract class {{class}} extends BaseModel
+{
+}

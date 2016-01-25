@@ -1,0 +1,9 @@
+<?php
+
+namespace App\Base\Providers;
+
+use Gregoriohc\Beet\Support\Providers\RouteServiceProvider as BaseRouteServiceProvider;
+
+abstract class RouteServiceProvider extends BaseRouteServiceProvider
+{
+}

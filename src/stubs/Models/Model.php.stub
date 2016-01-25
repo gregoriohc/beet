@@ -1,0 +1,9 @@
+<?php
+
+namespace App\Models;
+
+use App\Base\Models\{{class}} as BaseModel;
+
+class {{class}} extends BaseModel
+{
+}
