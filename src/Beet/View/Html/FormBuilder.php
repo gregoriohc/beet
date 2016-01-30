@@ -2,7 +2,7 @@
 
 namespace Gregoriohc\Beet\View\Html;
 
-use Collective\Html\FormBuilder as BaseFormBuilder;
+use Bootstrapper\Form as BaseFormBuilder;
 
 class FormBuilder extends BaseFormBuilder
 {

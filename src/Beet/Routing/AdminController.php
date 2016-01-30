@@ -2,6 +2,9 @@
 
 namespace Gregoriohc\Beet\Routing;
 
+use App\Models\Object;
+use View;
+
 class AdminController extends Controller
 {
     /**
@@ -12,6 +15,8 @@ class AdminController extends Controller
         $this->middleware('auth');
 
         $this->module = strtolower(substr(class_basename(self::class), 0, -10));
+
+        View::share('appObjects', Object::all());
 
         parent::__construct();
     }

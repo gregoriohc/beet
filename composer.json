@@ -34,6 +34,9 @@
     "laravelcollective/html": "5.2.*"
   },
   "autoload": {
+    "files": [
+      "src/Beet/Support/helpers.php"
+    ],
     "psr-4": {
       "Gregoriohc\\Beet\\": "src/Beet/"
     }
