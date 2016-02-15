@@ -2,15 +2,17 @@
 
 namespace Gregoriohc\Beet\Routing;
 
-class WebController extends Controller
+use Illuminate\Routing\Controller as Controller;
+
+abstract class WebController extends Controller
 {
+    use Resourceful;
+
     /**
      * Create a new web controller instance.
      */
     public function __construct()
     {
-        $this->module = strtolower(substr(class_basename(self::class), 0, -10));
-
-        parent::__construct();
+        $this->bootResourceful(self::class);
     }
 }

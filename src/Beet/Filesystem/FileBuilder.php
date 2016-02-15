@@ -13,7 +13,7 @@ class FileBuilder
      *
      * @var \Illuminate\Filesystem\Filesystem
      */
-    public $filesystem;
+    private $filesystem;
 
     /**
      * The stubs base path.
@@ -23,13 +23,22 @@ class FileBuilder
     private $stubsBasePath;
 
     /**
+     * The indentation string.
+     *
+     * @var string
+     */
+    private $indentation;
+
+    /**
      * FileBuilder constructor.
      *
      * @param string|null $stubsPath
+     * @param string $indentation
      */
-    public function __construct($stubsPath = null)
+    public function __construct($stubsPath = null, $indentation = '    ')
     {
         $this->filesystem = new Filesystem();
+        $this->indentation = $indentation;
 
         if (is_null($stubsPath)) {
             $this->stubsBasePath = realpath(__DIR__ . '/../../stubs');
@@ -63,7 +72,7 @@ class FileBuilder
 
         $stubContent = $this->filesystem->get($pathStub);
         foreach ($variables as $key => $value) {
-            $stubContent = str_replace($key, $value, $stubContent);
+            $stubContent = $this->replaceVariable($key, $value, $stubContent);
         }
 
         $this->filesystem->put($pathEndFile, $stubContent);
@@ -126,5 +135,62 @@ class FileBuilder
      */
     private function stub($path = '') {
         return rtrim($this->stubsBasePath . '/' . trim($path, '/'), '/') . '.stub';
+    }
+
+    /**
+     * @param string $line
+     * @param bool|string|false $indents
+     * @return string
+     */
+    private function indentLine($line, $indents = false)
+    {
+        $indentation = '';
+
+        if (is_int($indents)) {
+            $indentation = str_repeat($this->indentation, $indents);
+        } elseif (is_string($indents)) {
+            $indentation = $indents;
+        }
+
+        return $indentation . $line;
+    }
+
+    /**
+     * @param string $text
+     * @param string $key
+     * @param string|string[] $value
+     * @return string
+     */
+    private function replaceVariable($text, $key, $value)
+    {
+        $lines = preg_split ('/$\R?^/m', $text);
+
+        $lines = array_map(function($line) use ($key, $value) {
+            $indentation = $this->findIndentation($line);
+
+            if (is_array($value)) {
+                $value = array_map(function($value) use ($indentation) {
+                    return $this->indentLine($value, $indentation);
+                }, $value);
+                $value = substr(implode(PHP_EOL, $value), strlen($indentation));
+            }
+
+            return str_replace($key, $value, $line);
+        }, $lines);
+
+        return implode(PHP_EOL, $lines);
+    }
+
+    /**
+     * @param $text
+     * @return string|bool
+     */
+    public function findIndentation($text)
+    {
+        if (preg_match('/^(\s+)/', $text, $matches)) {
+            return $matches[0];
+        }
+
+        return false;
     }
 }

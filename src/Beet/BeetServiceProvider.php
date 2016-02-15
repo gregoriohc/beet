@@ -2,60 +2,23 @@
 
 namespace Gregoriohc\Beet;
 
+use Event;
+use Gate;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Gregoriohc\Beet\View\Html\FormBuilder;
 use Gregoriohc\Beet\View\Html\HtmlBuilder;
+use Route;
 
 class BeetServiceProvider extends ServiceProvider
 {
-    private $providers = [
-        \Dingo\Api\Provider\LaravelServiceProvider::class,
-        \Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
-        \LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class,
-        \LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
-        \Barryvdh\Cors\ServiceProvider::class,
-        \Zizaco\Entrust\EntrustServiceProvider::class,
-        \Bootstrapper\BootstrapperL5ServiceProvider::class,
-    ];
-
-    private $aliases = [
-        'JWTAuth'       => \Tymon\JWTAuth\Facades\JWTAuth::class,
-        'JWTFactory'    => \Tymon\JWTAuth\Facades\JWTFactory::class,
-        'Authorizer'    => \LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
-        'Entrust'       => \Zizaco\Entrust\EntrustFacade::class,
-        'Html'          => \Gregoriohc\Beet\Facades\Html::class,
-        'Form'          => \Gregoriohc\Beet\Facades\Form::class,
-        'Accordion'     => \Bootstrapper\Facades\Accordion::class,
-        'Alert'         => \Bootstrapper\Facades\Alert::class,
-        'Badge'         => \Bootstrapper\Facades\Badge::class,
-        'Breadcrumb'    => \Bootstrapper\Facades\Breadcrumb::class,
-        'Button'        => \Bootstrapper\Facades\Button::class,
-        'ButtonGroup'   => \Bootstrapper\Facades\ButtonGroup::class,
-        'Carousel'      => \Bootstrapper\Facades\Carousel::class,
-        'ControlGroup'  => \Bootstrapper\Facades\ControlGroup::class,
-        'DropdownButton'=> \Bootstrapper\Facades\DropdownButton::class,
-        'Helpers'       => \Bootstrapper\Facades\Helpers::class,
-        'Icon'          => \Bootstrapper\Facades\Icon::class,
-        'InputGroup'    => \Bootstrapper\Facades\InputGroup::class,
-        'Image'         => \Bootstrapper\Facades\Image::class,
-        'Label'         => \Bootstrapper\Facades\Label::class,
-        'MediaObject'   => \Bootstrapper\Facades\MediaObject::class,
-        'Modal'         => \Bootstrapper\Facades\Modal::class,
-        'Navbar'        => \Bootstrapper\Facades\Navbar::class,
-        'Navigation'    => \Bootstrapper\Facades\Navigation::class,
-        'Panel'         => \Bootstrapper\Facades\Panel::class,
-        'ProgressBar'   => \Bootstrapper\Facades\ProgressBar::class,
-        'Tabbable'      => \Bootstrapper\Facades\Tabbable::class,
-        'Table'         => \Bootstrapper\Facades\Table::class,
-        'Thumbnail'     => \Bootstrapper\Facades\Thumbnail::class,
-    ];
-
-    private $commands = [
-        \Gregoriohc\Beet\Console\Commands\Create::class,
-        \Gregoriohc\Beet\Console\Commands\Update::class,
-        \Gregoriohc\Beet\Console\Commands\Destroy::class,
-    ];
+    private $appServices;
+    private $appProviders;
+    private $appAliases;
+    private $appConsoleCommands;
+    private $authPolicies;
+    private $eventsListen;
+    private $eventsSubscribe;
 
     /**
      * Register the service provider.
@@ -64,20 +27,11 @@ class BeetServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        foreach ($this->providers as $provider) {
-            $this->app->register($provider);
-        }
-
-        foreach ($this->aliases as $name => $class) {
-            AliasLoader::getInstance()->alias($name, $class);
-        }
-
-        $this->registerHtmlBuilder();
-        $this->registerFormBuilder();
+        $this->config();
+        $this->registerProviders();
+        $this->registerAliases();
+        $this->registerBuilders();
         $this->registerCommands();
-
-        $this->app->alias('html', 'Gregoriohc\Beet\View\Html\HtmlBuilder');
-        $this->app->alias('form', 'Gregoriohc\Beet\View\Html\FormBuilder');
     }
 
     /**
@@ -87,7 +41,81 @@ class BeetServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->bootRoutes();
+        $this->bootEvents();
+        $this->bootListeners();
+        $this->bootPolicies();
         $this->loadViewsFrom(realpath(__DIR__.'/../resources/views'), 'beet');
+    }
+
+    /**
+     * Initialize the package and base config.
+     *
+     * @return void
+     */
+    private function config()
+    {
+        $this->mergeRecursiveConfigFrom(__DIR__.'/../config/beet_base.php', 'beet_base');
+
+        $this->appServices = config('beet_base.app.services');
+        $this->appProviders = config('beet_base.app.providers');
+        $this->appAliases = config('beet_base.app.aliases');
+        $this->appConsoleCommands = config('beet_base.app.console.commands');
+        $this->authPolicies = config('beet_base.auth.policies');
+        $this->eventsListen = config('beet_base.events.listen');
+        $this->eventsSubscribe = config('beet_base.events.subscribe');
+    }
+
+    /**
+     * Boot the package and base routes.
+     *
+     * @return void
+     */
+    private function bootRoutes()
+    {
+        if (! $this->app->routesAreCached()) {
+            Route::group(['namespace' => 'App\Http\Controllers'], function ($router) {
+                require base_path('App/Base/Http/routes.php');
+            });
+        }
+    }
+
+    /**
+     * Boot the package and base events.
+     *
+     * @return void
+     */
+    private function bootEvents()
+    {
+        foreach ($this->eventsListen as $event => $listeners) {
+            foreach ($listeners as $listener) {
+                Event::listen($event, $listener);
+            }
+        }
+    }
+
+    /**
+     * Boot the package and base listeners.
+     *
+     * @return void
+     */
+    private function bootListeners()
+    {
+        foreach ($this->eventsSubscribe as $subscriber) {
+            Event::subscribe($subscriber);
+        }
+    }
+
+    /**
+     * Boot the package and base policies.
+     *
+     * @return void
+     */
+    private function bootPolicies()
+    {
+        foreach ($this->authPolicies as $key => $value) {
+            Gate::policy($key, $value);
+        }
     }
 
     /**
@@ -124,13 +152,50 @@ class BeetServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the package commands.
+     * Register the builders.
      *
      * @return void
      */
-    protected function registerCommands()
+    public function registerBuilders()
     {
-        $this->commands($this->commands);
+        $this->registerHtmlBuilder();
+        $this->registerFormBuilder();
+        $this->app->alias('html', 'Gregoriohc\Beet\View\Html\HtmlBuilder');
+        $this->app->alias('form', 'Gregoriohc\Beet\View\Html\FormBuilder');
+    }
+
+    /**
+     * Register the required vendors providers.
+     *
+     * @return void
+     */
+    private function registerProviders()
+    {
+        foreach ($this->appProviders as $provider) {
+            $this->app->register($provider);
+        }
+    }
+
+    /**
+     * Register the required vendors aliases.
+     *
+     * @return void
+     */
+    private function registerAliases()
+    {
+        foreach ($this->appAliases as $name => $class) {
+            AliasLoader::getInstance()->alias($name, $class);
+        }
+    }
+
+    /**
+     * Register the commands.
+     *
+     * @return void
+     */
+    private function registerCommands()
+    {
+        $this->commands($this->appConsoleCommands);
     }
 
     /**
@@ -141,5 +206,19 @@ class BeetServiceProvider extends ServiceProvider
     public function provides()
     {
         return ['html', 'form', 'Gregoriohc\Beet\View\Html\HtmlBuilder', 'Gregoriohc\Beet\View\Html\FormBuilder'];
+    }
+
+    /**
+     * Merge the given configuration with the existing configuration.
+     *
+     * @param  string  $path
+     * @param  string  $key
+     * @return void
+     */
+    protected function mergeRecursiveConfigFrom($path, $key)
+    {
+        $config = $this->app['config']->get($key, []);
+
+        $this->app['config']->set($key, array_merge_recursive(require $path, $config));
     }
 }

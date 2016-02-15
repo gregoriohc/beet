@@ -54,7 +54,6 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
     </div>
 </div>
 
-
 <section id="home" name="home"></section>
 <div id="headerwrap">
     <div class="container">
@@ -83,6 +82,99 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
 </div><!--/ #headerwrap -->
 
 
+<div id="map" style="height:400px;width:600px;"></div>
+<script src="/js/geoxml3.js"></script>
+<script>
+
+    var kmlDoc;
+    var map;
+    var coords;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom:20,
+            center: new google.maps.LatLng(36.68397751182991, -6.131274549999944),
+            panControl: false,
+            streetViewControl: true,
+            zoomControl: true,
+            zoomControlOptions: { style: google.maps.NavigationControlStyle.SMALL },
+            scaleControl: false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        var ctaLayer = new google.maps.KmlLayer({
+            url: 'http://www.google.com/maps/d/kml?mid=zaohByv9XlmI.kymYt7J8CHME',
+            map: map
+        });
+
+        google.maps.event.addListener(ctaLayer, 'click', function(kmlEvent) {
+            console.log(kmlEvent.latLng.lat());
+            calcRoute(kmlEvent.latLng.lat()+","+kmlEvent.latLng.lng());
+        });
+
+        directionsDisplay = new google.maps.DirectionsRenderer();
+        directionsDisplay.setMap(map);
+        directionsDisplay.setOptions( { suppressMarkers: true } );
+
+        geoXml = new geoXML3.parser({map: map});
+
+        $.ajax({
+            url : '/wkml.php',
+            dataType : 'html',
+            success : function(data) {
+                if ((typeof ActiveXObject != 'undefined') || ("ActiveXObject" in window)) {
+                    kmlDoc = new ActiveXObject('Microsoft.XMLDOM');
+                    kmlDoc.loadXML(data);
+                }
+
+                if (typeof DOMParser != 'undefined') {
+                    kmlDoc = (new DOMParser()).parseFromString(data, 'text/xml');
+                }
+
+
+                var placemarkNodes = kmlDoc.getElementsByTagName('Placemark');
+                for (pm = 0; pm < placemarkNodes.length; pm++) {
+                    // Init the placemark object
+                    node = placemarkNodes[pm];
+                    coords = node.getElementsByTagName('coordinates')[0].childNodes[0].nodeValue.split(",");
+                    console.log(coords);http://www.lustauwineaffairs.com/en/lustau-mundo
+                }
+            }
+        });
+    }
+
+
+
+    function calcRoute(end) {
+        var directionsService = new google.maps.DirectionsService();
+        var waypts = [];
+        var checkboxArray = 0;
+
+        for (var i = 0; i < checkboxArray.length; i++) {
+            if (checkboxArray.options[i].selected == true) {
+                waypts.push({
+                    location:checkboxArray[i].value,
+                    stopover:true});
+            }
+        }
+
+        var request = {
+            origin: me,
+            destination: end,
+            waypoints: waypts,
+            optimizeWaypoints: true,
+            travelMode: google.maps.TravelMode.DRIVING
+        };
+        directionsService.route(request, function(response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+
+            }
+        });
+    }
+
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOGrnkOYHOK69tkO2LNF0ANUSl6iQPPVM&signed_in=false&callback=initMap"></script>
 <section id="desc" name="desc"></section>
 <!-- INTRO WRAP -->
 <div id="intro">

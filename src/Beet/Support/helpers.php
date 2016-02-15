@@ -39,7 +39,7 @@ if (! function_exists('class_ancestor')) {
         $ancestorBaseName = studly_case(implode('_', $parts));
 
         if (class_exists($classNamespace.$ancestorBaseName)) {
-            return true;
+            return $classNamespace.$ancestorBaseName;
         }
 
         return false;

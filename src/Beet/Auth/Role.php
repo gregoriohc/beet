@@ -4,6 +4,6 @@ namespace Gregoriohc\Beet\Auth;
 
 use Zizaco\Entrust\EntrustRole;
 
-class Role extends EntrustRole
+abstract class Role extends EntrustRole
 {
 }

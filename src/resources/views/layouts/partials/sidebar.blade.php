@@ -11,11 +11,11 @@
             {{ Html::close() }}
         {{ Html::close() }}
         @endif
-        {!! Form::open(['method' => 'get', 'class' => 'sidebar-form']) !!}
+        {!! Form::open(['url' => '/admin/search', 'method' => 'get', 'class' => 'sidebar-form']) !!}
             {{ Html::open('div', ['class' => 'input-group']) }}
-                {{ Form::input('text', 'q', null, ['class' => 'form-control', 'placeholder' => 'Search...']) }}
+                {!! Form::input('text', 'q', null, ['class' => 'form-control', 'placeholder' => 'Search...']) !!}
                 {{ Html::open('span', ['class' => 'input-group-btn']) }}
-                    {{ Form::button(Html::iconFa('search'), ['type' => 'submit', 'name' => 'search', 'id' => 'search-btn', 'class' => "btn btn-flat"]) }}
+                    {!! Form::button(Html::iconFa('search'), ['type' => 'submit', 'id' => 'search-btn', 'class' => "btn btn-flat"]) !!}
                 {{ Html::close() }}
             {{ Html::close() }}
         {!! Form::close() !!}
@@ -26,7 +26,7 @@
             <li><a href="{{ route('admin.app.index') }}"><i class='fa fa-link'></i> <span>Dashboard</span></a></li>
             <li class="header">OBJECTS</li>
             @foreach($appObjects as $row)
-                <li{!! (Route::getCurrentRoute()->getName() == 'admin.'.snake_case($row->name).'.index' ? ' class="active"' : '') !!}><a href="{{ route('admin.'.snake_case($row->name).'.index') }}"><i class='fa fa-link'></i> <span>{{ trans('model.'.$row->name.'.plural') }}</span></a></li>
+                <li{!! (Route::getCurrentRoute()->getName() == 'admin.'.snake_case($row->name, '.').'.index' ? ' class="active"' : '') !!}><a href="{{ route('admin.'.snake_case($row->name, '.').'.index') }}"><i class='fa fa-link'></i> <span>{{ trans('model.'.snake_case($row->name).'.plural') }}</span></a></li>
             @endforeach
         </ul><!-- /.sidebar-menu -->
     {{ Html::close() }}

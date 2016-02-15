@@ -2,7 +2,9 @@
 
 namespace Gregoriohc\Beet\View\Html;
 
+use Button;
 use Collective\Html\HtmlBuilder as BaseHtmlBuilder;
+use Form;
 
 class HtmlBuilder extends BaseHtmlBuilder
 {
@@ -135,5 +137,41 @@ class HtmlBuilder extends BaseHtmlBuilder
     public function doctype($doctype)
     {
         return $this->toHtmlString('<!DOCTYPE ' . $doctype . '>');
+    }
+
+    /**
+     * Generate request method button.
+     *
+     * @param array $options
+     *
+     * @return \Illuminate\Support\HtmlString
+     */
+    public function buttonMethod($options)
+    {
+        if (!isset($options['class'])) $options['class'] = 'primary';
+        if (!isset($options['title'])) $options['title'] = null;
+        if (!isset($options['icon'])) $options['icon'] = 'cog';
+
+        switch ($options['method']) {
+            case 'get':
+                $code = $this->link($options['url'], $this->iconFa($options['icon']), ['class' => 'btn btn-sm btn-'.$options['class'], 'title' => $options['title']]);
+                break;
+            default:
+                $code = $this->toHtmlString(Form::open(['url' => $options['url'], 'method' => $options['method'], 'style' => 'display:inline;'])
+                    .Button::setType('btn-'.$options['class'])->withValue($this->iconFa($options['icon']))->addAttributes(['title' => $options['title']])->small()->submit()
+                    .Form::close());
+                break;
+        }
+
+        return $code;
+    }
+
+    public function buttonsMethodGroup($buttonsOptions)
+    {
+        foreach ($buttonsOptions as $button => $options) {
+            $buttonsOptions[$button] = $this->buttonMethod($options);
+        }
+
+        return $this->toHtmlString(implode(' ', $buttonsOptions));
     }
 }

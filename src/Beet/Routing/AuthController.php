@@ -14,9 +14,9 @@ use App\Models\User;
 use Validator;
 use Response;
 
-class AuthController extends BaseController
+abstract class AuthController extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use Serviceable, AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /*
     |--------------------------------------------------------------------------
@@ -43,6 +43,8 @@ class AuthController extends BaseController
      */
     public function __construct()
     {
+        $this->bootServiceable();
+
         $this->middleware('guest', ['except' => 'logout']);
     }
 

@@ -2,9 +2,10 @@
 
 namespace Gregoriohc\Beet\Routing;
 
+use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
-class PasswordController extends Controller
+abstract class PasswordController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -17,7 +18,7 @@ class PasswordController extends Controller
     |
     */
 
-    use ResetsPasswords;
+    use Resourceful, ResetsPasswords;
 
     /**
      * Create a new password controller instance.

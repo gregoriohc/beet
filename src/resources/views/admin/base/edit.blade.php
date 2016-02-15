@@ -13,7 +13,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             {!! Form::Model($modelData, ['route' => ['admin.'.$resource.'.update', $modelData->id], 'method' => 'put']) !!}
-            @include('beet::admin.base.partials.form')
+            @include('beet::admin.base.partials.model_form')
             <div class="pull-right">
                 {!! Button::normal(trans('model.common.cancel'))->asLinkTo(route('admin.'.$resource.'.index')) !!}
                 {!! Button::primary(trans('model.common.edit'))->submit() !!}
