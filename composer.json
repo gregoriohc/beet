@@ -23,9 +23,7 @@
   ],
   "require": {
     "php": ">=5.3.0",
-    "dingo/api": "1.0.x@dev",
-    "asm89/stack-cors": "dev-master as 0.2.2",
-    "barryvdh/laravel-cors": "^0.7.3",
+    "barryvdh/laravel-cors": "^0.8.0",
     "tymon/jwt-auth": "0.5.x",
     "lucadegasperi/oauth2-server-laravel": "5.1.x",
     "zizaco/entrust": "dev-laravel-5-2@dev",
